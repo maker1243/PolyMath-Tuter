@@ -4,7 +4,9 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev=false
+# BuildKit cache mount: npm 다운로드 캐시가 빌드 간 유지되어 재빌드가 훨씬 빠름
+RUN --mount=type=cache,target=/root/.npm,sharing=locked \
+    npm ci --prefer-offline --no-audit --no-fund --omit=dev=false
 
 # ---- Build ----
 FROM node:20-alpine AS build
@@ -12,7 +14,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+# Next.js 의 SWC/Webpack 캐시도 빌드 간 유지
+RUN --mount=type=cache,target=/app/.next/cache,sharing=locked \
+    npm run build
 
 # ---- Runtime ----
 FROM node:20-alpine AS runner

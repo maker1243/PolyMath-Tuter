@@ -54,8 +54,70 @@ function state() {
       loaded: false,
     };
     loadFromDisk();
+    seedOwnerFromEnv();
   }
   return g.__polymathAuth;
+}
+
+/**
+ * Render/Fly 등 ephemeral 파일시스템 환경에서 재배포 후에도 로그인을 유지하기 위해,
+ * 환경변수로 지정된 오너 계정을 서버 시작 시 "지금 등록" 한다.
+ *
+ * 필수 env: POLYMATH_SEED_EMAIL, POLYMATH_SEED_PASSWORD
+ * 선택 env: POLYMATH_SEED_NAME (기본 "오너")
+ *
+ * 동작:
+ * - 해당 이메일이 아직 없으면 → 새 유저 생성 (가장 오래된 createdAt 으로 → 자동 오너)
+ * - 이미 있으면 → 비밀번호를 env 값으로 재설정 (환경변수가 소스 오브 트루스)
+ */
+function seedOwnerFromEnv() {
+  const email = (process.env.POLYMATH_SEED_EMAIL ?? "").trim().toLowerCase();
+  const password = process.env.POLYMATH_SEED_PASSWORD ?? "";
+  const displayName = (process.env.POLYMATH_SEED_NAME ?? "오너")
+    .trim()
+    .slice(0, 40);
+  if (!email || !password) return;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    console.warn("[auth] POLYMATH_SEED_EMAIL 형식이 올바르지 않습니다");
+    return;
+  }
+  if (password.length < 8) {
+    console.warn("[auth] POLYMATH_SEED_PASSWORD 는 8자 이상이어야 합니다");
+    return;
+  }
+  const s = g.__polymathAuth!;
+  const existingId = s.byEmail.get(email);
+  const now = Date.now();
+  if (existingId) {
+    const user = s.users.get(existingId);
+    if (!user) return;
+    // 비밀번호를 env 값으로 재동기화 (매 재시작마다)
+    const newSalt = randomBytes(16).toString("hex");
+    user.salt = newSalt;
+    user.passwordHash = hashPassword(password, newSalt);
+    if (displayName && user.displayName !== displayName) {
+      user.displayName = displayName;
+    }
+    // 세션은 유지 (쿠키 파기 안 함)
+    scheduleSave();
+    return;
+  }
+  // 새로 생성 — createdAt 을 0 으로 두어 어떤 기존 유저보다도 오래된 것으로 처리
+  // → isOwner() 가 항상 이 유저를 오너로 식별하도록 보장
+  const salt = randomBytes(16).toString("hex");
+  const user: User = {
+    id: randomBytes(10).toString("base64url"),
+    email,
+    displayName: displayName || "오너",
+    passwordHash: hashPassword(password, salt),
+    salt,
+    createdAt: 0, // 오너 보장
+    lastLoginAt: now,
+  };
+  s.users.set(user.id, user);
+  s.byEmail.set(email, user.id);
+  scheduleSave();
+  console.log(`[auth] seeded owner account: ${email}`);
 }
 
 function loadFromDisk() {
