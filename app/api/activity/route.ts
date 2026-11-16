@@ -18,7 +18,7 @@ function csvEscape(v: unknown): string {
  * - GET /api/activity?format=csv → UTF-8 BOM CSV (다운로드용)
  */
 export async function GET(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me)
     return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const summary = summarizeUser(me.id);

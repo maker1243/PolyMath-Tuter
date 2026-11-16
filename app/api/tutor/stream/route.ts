@@ -169,7 +169,7 @@ export async function POST(req: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({
       userId: me.id,

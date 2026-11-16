@@ -14,7 +14,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   return NextResponse.json({ sources: listSources(me.id) });
 }
@@ -30,7 +30,7 @@ interface PostBody {
 }
 
 export async function POST(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const body = (await req.json()) as PostBody;
   const action = body.action ?? "create";
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const url = new URL(req.url);
   const id = url.searchParams.get("id");

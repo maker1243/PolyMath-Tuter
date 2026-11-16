@@ -15,8 +15,9 @@ interface Body {
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const body = (await req.json()) as Body;
   if (!body?.pid || !body?.text?.trim()) {
     return NextResponse.json({ error: "pid 및 text 필수" }, { status: 400 });
@@ -30,7 +31,7 @@ export async function POST(
   if (!message) {
     return NextResponse.json({ error: "빈 메시지" }, { status: 400 });
   }
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({ userId: me.id, type: "message_sent", roomId: params.roomId });
   }
@@ -44,8 +45,9 @@ interface DeleteBody {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const body = (await req.json()) as DeleteBody;
   if (!body?.messageId || !body?.pid) {
     return NextResponse.json(

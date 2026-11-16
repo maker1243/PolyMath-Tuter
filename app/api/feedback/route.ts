@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  * GET /api/feedback → 로그인 사용자의 AI 피드백 집계 + 최근 10개
  */
 export async function GET() {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me)
     return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   return NextResponse.json({

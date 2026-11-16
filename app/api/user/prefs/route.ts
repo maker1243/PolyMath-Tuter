@@ -6,13 +6,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   return NextResponse.json({ prefs: getUserPrefs(me.id) });
 }
 
 export async function PUT(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const body = (await req.json()) as { aiSettings: AiPrefs | null };
   const next = setUserAiPrefs(me.id, body?.aiSettings ?? null);

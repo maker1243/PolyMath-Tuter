@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
  * GET /api/study/cards?source=X  — 자료별
  */
 export async function GET(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const url = new URL(req.url);
   const dueOnly = url.searchParams.get("due") === "1";
@@ -43,7 +43,7 @@ interface PostBody {
 }
 
 export async function POST(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const body = (await req.json()) as PostBody;
   const action = body.action ?? "create";
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   const url = new URL(req.url);
   const id = url.searchParams.get("id");

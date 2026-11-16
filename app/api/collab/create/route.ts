@@ -164,7 +164,7 @@ export async function POST(req: Request) {
   };
   setMission(roomId, mission);
 
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({
       userId: me.id,

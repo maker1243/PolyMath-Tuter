@@ -11,7 +11,7 @@ interface Body {
 
 // 디스플레이 이름 변경 — 간단히 users.json 를 직접 수정
 export async function PATCH(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) {
     return NextResponse.json({ error: "로그인 필요" }, { status: 401 });
   }

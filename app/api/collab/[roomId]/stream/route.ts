@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const url = new URL(req.url);
   const pid = (url.searchParams.get("pid") ?? "").slice(0, 64);
   const name = (url.searchParams.get("name") ?? "익명").slice(0, 24);
@@ -22,7 +23,7 @@ export async function GET(
   }
 
   joinRoom(params.roomId, { id: pid, name, color });
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({ userId: me.id, type: "room_join", roomId: params.roomId });
   }

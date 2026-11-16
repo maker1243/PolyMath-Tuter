@@ -8,8 +8,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { roomId: string; fileId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string; fileId: string }> },
 ) {
+  const params = await paramsP;
   const file = getFile(params.roomId, params.fileId);
   if (!file) {
     return new Response("not found", { status: 404 });

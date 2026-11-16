@@ -14,8 +14,9 @@ const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const form = await req.formData().catch(() => null);
   if (!form) {
     return NextResponse.json(
@@ -49,7 +50,7 @@ export async function POST(
   const absPath = join(roomDir, storedName);
   writeFileSync(absPath, buf);
 
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({
       userId: me.id,

@@ -37,8 +37,9 @@ interface Body {
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const body = (await req.json()) as Body;
   if (!body?.byPid || !body?.action) {
     return NextResponse.json({ error: "byPid·action 필수" }, { status: 400 });

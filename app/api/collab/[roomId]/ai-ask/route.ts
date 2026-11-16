@@ -75,8 +75,9 @@ function demoAnswer(question: string): string {
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const body = (await req.json()) as Body;
   const question = (body?.question ?? "").trim();
   if (!question) {
@@ -139,7 +140,7 @@ export async function POST(
   const msg = postAiMessage(params.roomId, finalText, {
     codeContext: body.selection ?? undefined,
   });
-  const me = currentUser();
+  const me = await currentUser();
   if (me) {
     logActivity({
       userId: me.id,

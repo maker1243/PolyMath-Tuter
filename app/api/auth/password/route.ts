@@ -17,7 +17,7 @@ interface Body {
 }
 
 export async function POST(req: Request) {
-  const me = currentUser();
+  const me = await currentUser();
   if (!me) {
     return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
   }
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   }
   // 모든 세션 무효화 후 새 세션 발급 → 쿠키 갱신 (지금 쓰고 있는 창은 유지)
   const sess = createSession(me.id);
-  const _old = cookies().get(SESSION_COOKIE)?.value;
+  const _old = (await cookies()).get(SESSION_COOKIE)?.value;
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, sess.token, {
     httpOnly: true,

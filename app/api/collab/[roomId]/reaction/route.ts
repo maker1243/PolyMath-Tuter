@@ -16,8 +16,9 @@ interface Body {
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } },
+  { params: paramsP }: { params: Promise<{ roomId: string }> },
 ) {
+  const params = await paramsP;
   const body = (await req.json()) as Body;
   if (!body?.messageId || !body?.pid || !body?.rating) {
     return NextResponse.json(
@@ -34,7 +35,7 @@ export async function POST(
 
   // AI 메시지에 대한 clear 아닌 평가는 영구 피드백 로그에도 기록
   if (msg.role === "ai" && (body.rating === "up" || body.rating === "down")) {
-    const me = currentUser();
+    const me = await currentUser();
     // 서버에서 메시지 payload 파싱 — "_(⚡ claude · 호스트 지갑: X)_" 라벨 추출
     const providerMatch = msg.text.match(/⚡\s+(\w+)/);
     recordFeedback({
