@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: #0b0d12;
+  --fg: #e8ecf4;
+  --card-bg: rgba(20, 24, 33, 0.7);
+  --card-border: rgba(255, 255, 255, 0.05);
+  --input-bg: rgba(27, 33, 48, 0.6);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --chip-bg: rgba(255, 255, 255, 0.03);
+  --chip-border: rgba(255, 255, 255, 0.1);
+  --ghost-bg: rgba(255, 255, 255, 0.02);
+  --ghost-border: rgba(255, 255, 255, 0.1);
+  --scrollbar-thumb: #1f2636;
+  --scrollbar-thumb-hover: #2a3346;
+  --bg-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(91, 124, 250, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 110%, rgba(34, 211, 180, 0.12), transparent 60%);
+}
+
+html.light {
+  color-scheme: light;
+  --bg: #f6f8fc;
+  --fg: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(15, 23, 42, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.95);
+  --input-border: rgba(15, 23, 42, 0.14);
+  --chip-bg: rgba(15, 23, 42, 0.04);
+  --chip-border: rgba(15, 23, 42, 0.08);
+  --ghost-bg: rgba(15, 23, 42, 0.03);
+  --ghost-border: rgba(15, 23, 42, 0.1);
+  --scrollbar-thumb: #cfd6e3;
+  --scrollbar-thumb-hover: #b4bccb;
+  --bg-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(91, 124, 250, 0.1), transparent 60%),
+    radial-gradient(900px 500px at 90% 110%, rgba(34, 211, 180, 0.08), transparent 60%);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+body {
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border backdrop-blur-sm;
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white
+           transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500/60 disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2
+           text-sm font-medium text-muted-strong transition-colors;
+    background-color: var(--ghost-bg);
+    border-color: var(--ghost-border);
+  }
+  .btn-ghost:hover {
+    background-color: rgba(127, 127, 127, 0.08);
+  }
+
+  .input {
+    @apply w-full rounded-xl border px-3 py-2 text-sm
+           placeholder:text-muted focus:border-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500/30;
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--fg);
+  }
+
+  .label {
+    @apply mb-1 block text-xs font-medium uppercase tracking-wide text-muted;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5
+           text-xs text-muted-strong;
+    background-color: var(--chip-bg);
+    border-color: var(--chip-border);
+  }
+}
+
+/* 커스텀 스크롤바 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}

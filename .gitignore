@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+build/
+tsconfig.tsbuildinfo
+.env
+.env.local
+.env*.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+coverage/
+next-env.d.ts
+.polymath-data/
+
+# Fly.io
+.fly/
+
