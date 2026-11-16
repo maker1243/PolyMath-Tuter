@@ -28,6 +28,7 @@ import type { ImageProvider } from "@/lib/image-gen";
 import { useCurrentUser } from "@/lib/use-current-user";
 import { PasswordSection } from "@/components/PasswordSection";
 import { ProfileSection } from "@/components/ProfileSection";
+import { DataBackupSection } from "@/components/DataBackupSection";
 
 type TestState =
   | { kind: "idle" }
@@ -54,7 +55,7 @@ export default function SettingsPage() {
     groq: { kind: "idle" },
   });
   const [savedAt, setSavedAt] = useState<number | null>(null);
-  const { user } = useCurrentUser();
+  const { user, isOwner } = useCurrentUser();
   const [serverSynced, setServerSynced] = useState(false);
 
   // 로그인한 사용자는 서버 저장을 1차 소스로 사용 (localStorage 는 캐시)
@@ -455,6 +456,7 @@ export default function SettingsPage() {
 
       <ProfileSection />
       <PasswordSection />
+      {user && <DataBackupSection isOwner={isOwner} />}
     </div>
   );
 }
