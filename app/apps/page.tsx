@@ -15,6 +15,15 @@ interface MiniApp {
 
 const APPS: MiniApp[] = [
   {
+    href: "/apps/custom",
+    title: "커스텀 드릴 (분야·주제 선택)",
+    desc: "분야(수학/어학/프로그래밍/역사 등 9개) 를 고르고 세부 주제를 직접 입력 → AI 가 그 주제 전용 Q·A 플래시카드를 10~20장 생성. 중분류 칩으로 범위도 좁힐 수 있어요.",
+    emoji: "🧩",
+    icon: Sparkles,
+    tag: "AI 생성",
+    ready: true,
+  },
+  {
     href: "/apps/math-quiz",
     title: "수학 사칙연산 드릴",
     desc: "레벨별 랜덤 문제 출제 → 즉시 채점. 시간 제한, 연속 정답 보너스, 틀린 문제 복습까지. AI 호출 없이 바로 실행.",
