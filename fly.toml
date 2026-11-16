@@ -1,31 +1,32 @@
-# Fly.io 설정 — PolyMath Tutor
-# `fly launch --no-deploy` 로 app 이름을 바꾸면 이 파일이 생성됨.
-# 여기 fly.toml 은 레퍼런스. 당신 app 이름으로 교체하세요.
+# fly.toml app configuration file generated for polymath-tuter on 2026-11-16T14:13:32Z
+#
+# See https://docs.fly.io/reference/configuration for information about how to use this file.
+#
 
-app = "polymath-tutor"            # ← 당신의 fly 앱 이름으로 교체
-primary_region = "nrt"            # 도쿄 (한국 가장 가까움). 다른 지역 가능: sin, hkg, lax
+app = 'polymath-tuter'
+primary_region = 'ams'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  POLYMATH_DATA_DIR = "/data"
-  NODE_ENV = "production"
-
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = "stop"     # 유휴 시 중지 (무료 티어 아낌)
-  auto_start_machines = true
-  min_machines_running = 0        # 0 이면 trial·hobby 무료. 24/7 는 1
-  processes = ["app"]
+  NODE_ENV = 'production'
+  POLYMATH_DATA_DIR = '/data'
 
 [[mounts]]
-  source = "polymath_data"        # `fly volumes create polymath_data --size 1`
-  destination = "/data"
-  initial_size = "1gb"
+  source = 'polymath_data'
+  destination = '/data'
+  initial_size = '1gb'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
 
 [[vm]]
-  cpu_kind = "shared"
+  cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 512                 # Yjs·Monaco 번들에 넉넉. 트래픽 많아지면 1024
+  memory_mb = 512
