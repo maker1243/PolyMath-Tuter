@@ -91,11 +91,31 @@ export function saveSession(session: LearningSession) {
   }
 }
 
+/** 어떤 구포맷/손상된 payload 가 들어와도 안전하게 LearningSession 으로 정규화.
+ *  구 포맷이 subjects/sources 를 아예 안 가진 경우를 대비해 기본값을 채워 둠. */
+function normalizeSession(raw: unknown, id: string): LearningSession | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Partial<LearningSession>;
+  return {
+    id: typeof r.id === "string" ? r.id : id,
+    createdAt:
+      typeof r.createdAt === "string" ? r.createdAt : new Date().toISOString(),
+    mode: (r.mode ?? "single") as LearningMode,
+    level: (r.level ?? "intermediate") as SkillLevel,
+    goal: typeof r.goal === "string" ? r.goal : "",
+    subjects: Array.isArray(r.subjects)
+      ? r.subjects.filter((x): x is string => typeof x === "string")
+      : [],
+    sources: Array.isArray(r.sources) ? r.sources : [],
+  };
+}
+
 export function loadSession(id: string): LearningSession | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(`${KEY_PREFIX}${id}`);
-    return raw ? (JSON.parse(raw) as LearningSession) : null;
+    if (!raw) return null;
+    return normalizeSession(JSON.parse(raw), id);
   } catch {
     return null;
   }
