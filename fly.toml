@@ -2,7 +2,7 @@
 # `fly launch --no-deploy` 로 app 이름을 바꾸면 이 파일이 생성됨.
 # 여기 fly.toml 은 레퍼런스. 당신 app 이름으로 교체하세요.
 
-app = "polymath-tutor"            # ← 당신의 fly 앱 이름으로 교체
+app = "polymath-tuter"            # Fly.io 에 배포된 실제 앱 이름
 primary_region = "nrt"            # 도쿄 (한국 가장 가까움). 다른 지역 가능: sin, hkg, lax
 
 [build]
