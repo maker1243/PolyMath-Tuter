@@ -13,7 +13,7 @@ primary_region = "nrt"            # 도쿄 (한국 가장 가까움). 다른 지
   NODE_ENV = "production"
 
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = "stop"     # 유휴 시 중지 (무료 티어 아낌)
   auto_start_machines = true

@@ -23,7 +23,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
+ENV PORT=8080
 ENV HOSTNAME=0.0.0.0
 # Fly volume mount point — persistent data (rooms·auth·activity·uploaded files)
 ENV POLYMATH_DATA_DIR=/data
@@ -41,7 +41,7 @@ RUN mkdir -p /data && chown -R nextjs:nodejs /data
 VOLUME ["/data"]
 
 USER nextjs
-EXPOSE 3000
+EXPOSE 8080
 
 # Next standalone 의 server.js 사용
 CMD ["node", "server.js"]
